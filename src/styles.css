@@ -24,9 +24,10 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    radial-gradient(circle at 28% 58%, rgba(185, 70, 45, 0.12), transparent 34rem),
-    radial-gradient(circle at 78% 34%, rgba(17, 106, 101, 0.1), transparent 28rem),
-    linear-gradient(135deg, #fbf2e5, #f4e6d2 46%, #efe3d2);
+    radial-gradient(circle at 18% 46%, rgba(185, 70, 45, 0.18), transparent 32rem),
+    radial-gradient(circle at 72% 38%, rgba(17, 106, 101, 0.16), transparent 30rem),
+    radial-gradient(circle at 48% 18%, rgba(255, 250, 241, 0.9), transparent 24rem),
+    linear-gradient(132deg, #fbf1e3 0%, #f6e6cf 42%, #efe2cf 68%, #e9ddcc 100%);
   color: var(--ink);
   font-family:
     "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
@@ -100,8 +101,41 @@ main {
 }
 
 .hero-grid {
+  position: relative;
   min-height: calc(100vh - 150px);
   align-items: end;
+}
+
+.hero-grid::before,
+.hero-grid::after {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  content: "";
+}
+
+.hero-grid::before {
+  top: 18%;
+  left: 47%;
+  width: clamp(110px, 12vw, 190px);
+  aspect-ratio: 1;
+  border: 1px solid rgba(185, 70, 45, 0.22);
+  border-radius: 18px;
+  transform: rotate(45deg);
+  box-shadow:
+    34px -34px 0 -20px rgba(17, 106, 101, 0.2),
+    -42px 42px 0 -26px rgba(24, 23, 19, 0.16);
+}
+
+.hero-grid::after {
+  right: 33%;
+  bottom: 18%;
+  width: 160px;
+  height: 42px;
+  border-top: 1px solid rgba(24, 23, 19, 0.18);
+  border-bottom: 1px solid rgba(24, 23, 19, 0.1);
+  transform: rotate(-10deg);
+  opacity: 0.78;
 }
 
 .hero-copy {
@@ -232,6 +266,7 @@ h3 {
 
 .hero-art {
   position: relative;
+  z-index: 1;
   align-self: stretch;
   min-height: clamp(560px, 74vh, 820px);
   animation: rise-in 900ms 100ms ease both;
@@ -319,6 +354,18 @@ h3 {
 .dot-two {
   bottom: 36%;
   left: 9%;
+}
+
+.hero-copy::after {
+  position: absolute;
+  right: 8%;
+  bottom: 22%;
+  width: 54px;
+  height: 54px;
+  content: "";
+  border: 1px solid rgba(17, 106, 101, 0.3);
+  transform: rotate(18deg);
+  opacity: 0.72;
 }
 
 .section {
