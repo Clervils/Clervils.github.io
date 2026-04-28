@@ -1,21 +1,21 @@
 # Clervil's Pages
 
-Wenhao Chen 的个人主页，面向博客、科研宣传和个人展示。
+Wenhao Chen's personal homepage for blog posts, research outreach, and public academic updates.
 
-## 开发
+## Development
 
 ```bash
 python3 -m http.server 5173
 ```
 
-然后访问 `http://localhost:5173`。
+Then open `http://localhost:5173`.
 
-## 构建
+## Build
 
 ```bash
 mkdir -p dist && cp index.html dist/ && cp -R src dist/
 ```
 
-## 内容入口
+## Content
 
-首版内容集中在 `index.html` 中，样式在 `src/styles.css` 中。后续可以拆分为 Markdown/MDX 博客、论文数据文件和项目配置。
+The first version keeps page content in `index.html` and styling in `src/styles.css`. Later versions can split blog posts, papers, and projects into Markdown/MDX or structured data files.
