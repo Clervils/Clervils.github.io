@@ -1,6 +1,6 @@
-# Personal Homepage
+# Clervil's Pages
 
-一个面向博客、科研宣传和个人展示的零依赖静态个人主页。
+Wenhao Chen 的个人主页，面向博客、科研宣传和个人展示。
 
 ## 开发
 
