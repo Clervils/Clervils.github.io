@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="个人主页，展示研究、博客、项目与学术动态。"
+    />
+    <title>Personal Homepage</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <nav class="nav">
+          <a href="#research">Research</a>
+          <a href="#blog">Blog</a>
+          <a href="#projects">Projects</a>
+          <a href="#subscribe">Contact</a>
+        </nav>
+
+        <div class="hero-grid">
+          <section class="hero-copy">
+            <p class="status">
+              <span aria-hidden="true">◆</span>
+              Shanghai / Remote
+            </p>
+            <h1>Your Name</h1>
+            <p class="subtitle">Researcher · Builder · Writer</p>
+            <p class="intro">
+              I study alignment, reasoning, and useful AI systems. This site
+              collects research notes, essays, projects, and public updates.
+            </p>
+            <div class="hero-actions">
+              <a class="button" href="#research">View research</a>
+              <a class="button ghost" href="#blog">Read blog</a>
+            </div>
+          </section>
+
+          <aside class="signal-card" aria-label="Site overview">
+            <div class="signal-top">
+              <span aria-hidden="true">✦</span>
+              <span>Homepage v0.1</span>
+            </div>
+            <h2>Research notes, essays, and public artifacts in one place.</h2>
+            <a class="signal-link" href="#blog">Start reading ↗</a>
+          </aside>
+        </div>
+      </header>
+
+      <section class="section grid-two" id="research">
+        <div>
+          <p class="eyebrow">Research</p>
+          <h2>Make the research legible before making it loud.</h2>
+        </div>
+        <div class="research-list">
+          <article class="research-card">
+            <span>Research Direction</span>
+            <h3>AI Alignment and Evaluation</h3>
+            <p>
+              Designing evaluation protocols and training signals for models
+              that behave reliably under distribution shift.
+            </p>
+          </article>
+          <article class="research-card">
+            <span>Current Work</span>
+            <h3>Reasoning-Centric Agents</h3>
+            <p>
+              Exploring how language agents plan, verify, and recover from
+              incomplete or noisy feedback.
+            </p>
+          </article>
+          <article class="research-card">
+            <span>Public Output</span>
+            <h3>Readable Research Notes</h3>
+            <p>
+              Turning experimental findings into concise notes that are useful
+              for collaborators and readers outside the lab.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section blog-panel" id="blog">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">Blog</p>
+            <h2>Recent writing</h2>
+          </div>
+          <a class="text-link" href="#subscribe">RSS soon</a>
+        </div>
+        <div class="post-list">
+          <article class="post-card">
+            <div>
+              <span>Workflow</span>
+              <h3>How I Track Research Ideas</h3>
+              <p>
+                A practical note on moving from scattered thoughts to
+                reproducible research threads.
+              </p>
+            </div>
+            <time datetime="2026-04-28">2026-04-28</time>
+          </article>
+          <article class="post-card">
+            <div>
+              <span>Research</span>
+              <h3>Notes on Building Evaluation Sets</h3>
+              <p>
+                What makes an evaluation set useful, brittle, or misleading
+                when model behavior keeps changing.
+              </p>
+            </div>
+            <time datetime="2026-04-20">2026-04-20</time>
+          </article>
+          <article class="post-card">
+            <div>
+              <span>Reading</span>
+              <h3>Reading List: Agents and Tool Use</h3>
+              <p>
+                Papers, systems, and implementation notes worth revisiting for
+                agentic AI research.
+              </p>
+            </div>
+            <time datetime="2026-04-12">2026-04-12</time>
+          </article>
+        </div>
+      </section>
+
+      <section class="section grid-two" id="projects">
+        <div>
+          <p class="eyebrow">Projects</p>
+          <h2>Public work that supports collaboration.</h2>
+        </div>
+        <ul class="project-list">
+          <li>Research demos and reproducibility artifacts</li>
+          <li>Blog essays on AI, tools, and academic workflows</li>
+          <li>Talk slides, posters, and public research summaries</li>
+        </ul>
+      </section>
+
+      <footer class="footer" id="subscribe">
+        <div>
+          <p class="eyebrow">Contact</p>
+          <h2>For collaboration, talks, or research discussion.</h2>
+        </div>
+        <a class="button" href="mailto:you@example.com">you@example.com</a>
+      </footer>
+    </main>
+  </body>
+</html>
