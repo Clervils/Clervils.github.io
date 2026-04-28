@@ -123,9 +123,9 @@ p {
 h1 {
   max-width: 780px;
   margin-bottom: 12px;
-  font-size: clamp(4.6rem, 13vw, 10.4rem);
-  line-height: 0.86;
-  letter-spacing: -0.09em;
+  font-size: clamp(3.8rem, 10vw, 8.4rem);
+  line-height: 0.9;
+  letter-spacing: -0.07em;
 }
 
 h2 {
@@ -153,7 +153,7 @@ h3 {
 .intro {
   max-width: 680px;
   color: var(--muted);
-  font-size: clamp(1.1rem, 2vw, 1.38rem);
+  font-size: clamp(1rem, 1.55vw, 1.22rem);
   line-height: 1.65;
 }
 
@@ -238,7 +238,8 @@ h3 {
   position: relative;
   z-index: 1;
   max-width: 440px;
-  font-size: clamp(2.3rem, 5vw, 4.9rem);
+  font-size: clamp(1.8rem, 3.8vw, 3.7rem);
+  line-height: 1.02;
 }
 
 .signal-link,
@@ -261,25 +262,29 @@ h3 {
 }
 
 .research-list,
-.post-list {
+.post-list,
+.creation-grid {
   display: grid;
   gap: 14px;
 }
 
 .research-card,
-.post-card {
+.post-card,
+.creation-card {
   border: 1px solid var(--line);
   background: var(--card);
   backdrop-filter: blur(18px);
 }
 
-.research-card {
+.research-card,
+.creation-card {
   padding: 24px;
   border-radius: 26px;
 }
 
 .research-card span,
-.post-card span {
+.post-card span,
+.creation-card span {
   display: inline-block;
   margin-bottom: 18px;
   color: var(--accent);
@@ -291,7 +296,8 @@ h3 {
 }
 
 .research-card p,
-.post-card p {
+.post-card p,
+.creation-card p {
   margin-bottom: 0;
   color: var(--muted);
   line-height: 1.65;
@@ -310,12 +316,107 @@ h3 {
   margin-top: 36px;
 }
 
+.creation-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 36px;
+}
+
 .post-card {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 24px;
   padding: 24px;
   border-radius: 28px;
+}
+
+.creations-panel {
+  padding-right: clamp(18px, 4vw, 54px);
+  padding-left: clamp(18px, 4vw, 54px);
+}
+
+.creation-card {
+  min-height: 260px;
+}
+
+.empty-state {
+  margin: 0;
+  color: var(--muted);
+  font-family: "Avenir Next", Avenir, sans-serif;
+}
+
+.markdown-detail {
+  margin-top: 20px;
+}
+
+.markdown-detail summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--accent);
+  font-family: "Avenir Next", Avenir, sans-serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
+.markdown-body {
+  max-width: 720px;
+  padding-top: 22px;
+  color: var(--ink);
+}
+
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  margin: 28px 0 12px;
+  font-size: clamp(1.35rem, 2vw, 1.9rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.markdown-body p,
+.markdown-body li,
+.markdown-body blockquote {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.78;
+}
+
+.markdown-body ul {
+  padding-left: 20px;
+}
+
+.markdown-body a {
+  color: var(--accent-2);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.markdown-body code {
+  padding: 0.12em 0.32em;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 250, 241, 0.72);
+  color: var(--ink);
+  font-size: 0.92em;
+}
+
+.markdown-body pre {
+  overflow-x: auto;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: rgba(24, 23, 19, 0.06);
+}
+
+.markdown-body pre code {
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+.markdown-body blockquote {
+  padding-left: 18px;
+  margin-left: 0;
+  border-left: 3px solid var(--accent-2);
 }
 
 time {
@@ -390,6 +491,7 @@ time {
   .hero-grid,
   .grid-two,
   .post-card,
+  .creation-grid,
   .footer {
     grid-template-columns: 1fr;
   }

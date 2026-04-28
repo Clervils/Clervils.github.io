@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "python3 -m http.server 5173",
-    "build": "mkdir -p dist && cp index.html dist/ && cp -R src dist/"
+    "content": "node scripts/build-content.mjs",
+    "dev": "npm run content && python3 -m http.server 5173",
+    "build": "npm run content && mkdir -p dist && cp index.html dist/ && cp -R src content dist/"
   },
   "dependencies": {},
   "devDependencies": {}
