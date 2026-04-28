@@ -32,6 +32,8 @@ Run the content script after adding or editing Markdown:
 npm run content
 ```
 
+Blog posts generate standalone pages under `blog/<slug>/` with a left-side table of contents and a reading layout that matches the homepage style. The homepage imports `src/content.generated.js` for cards and summaries.
+
 ## Development
 
 ```bash

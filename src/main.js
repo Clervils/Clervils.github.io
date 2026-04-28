@@ -34,10 +34,7 @@ function renderPostCard(post) {
         <span>${post.category}</span>
         <h3>${post.title}</h3>
         <p>${post.summary}</p>
-        <details class="markdown-detail">
-          <summary>Read note</summary>
-          <div class="markdown-body">${post.html}</div>
-        </details>
+        <a class="card-link" href="${post.url}">Read essay</a>
       </div>
       <time datetime="${post.date}">${post.date}</time>
     </article>

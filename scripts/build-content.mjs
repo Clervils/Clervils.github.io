@@ -1,18 +1,22 @@
-import { readdir, readFile, writeFile } from "node:fs/promises";
+import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 
 const root = process.cwd();
 const collections = [
-  ["blogPosts", "content/blog"],
-  ["creations", "content/creations"],
+  ["blogPosts", "content/blog", "blog"],
+  ["creations", "content/creations", ""],
 ];
 
 const generated = [];
 
-for (const [exportName, directory] of collections) {
-  const items = await readCollection(path.join(root, directory));
+for (const [exportName, directory, outputDirectory] of collections) {
+  const items = await readCollection(path.join(root, directory), outputDirectory);
   generated.push(`export const ${exportName} = ${JSON.stringify(items, null, 2)};`);
+
+  if (outputDirectory) {
+    await writePostPages(items, outputDirectory);
+  }
 }
 
 await writeFile(
@@ -20,7 +24,7 @@ await writeFile(
   `${generated.join("\n\n")}\n`,
 );
 
-async function readCollection(directory) {
+async function readCollection(directory, outputDirectory) {
   let files = [];
 
   try {
@@ -35,16 +39,20 @@ async function readCollection(directory) {
       .map(async (file) => {
         const raw = await readFile(path.join(directory, file), "utf8");
         const { frontmatter, body } = parseFrontmatter(raw);
+        const slug = frontmatter.slug || file.replace(/\.md$/, "");
         const title = frontmatter.title || titleFromBody(body) || titleFromFile(file);
         const summary = frontmatter.summary || firstParagraph(body) || "Published note.";
+        const rendered = renderMarkdown(stripLeadingTitle(body, title));
 
         return {
-          slug: file.replace(/\.md$/, ""),
+          slug,
           title,
           date: frontmatter.date || "",
           category: frontmatter.category || "Note",
           summary,
-          html: renderMarkdown(body),
+          url: outputDirectory ? `./${outputDirectory}/${slug}/` : "",
+          html: rendered.html,
+          toc: rendered.toc,
         };
       }),
   );
@@ -76,13 +84,70 @@ function parseFrontmatter(raw) {
   return { frontmatter, body: raw.slice(end + 4).trim() };
 }
 
+async function writePostPages(items, outputDirectory) {
+  for (const item of items) {
+    const directory = path.join(root, outputDirectory, item.slug);
+    await mkdir(directory, { recursive: true });
+    await writeFile(path.join(directory, "index.html"), renderPostPage(item));
+  }
+}
+
+function renderPostPage(post) {
+  const toc = post.toc.length
+    ? post.toc
+        .map((item) => `<a class="toc-link depth-${item.level}" href="#${item.id}">${item.text}</a>`)
+        .join("")
+    : '<span class="toc-empty">No sections</span>';
+
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="${escapeAttribute(post.summary)}" />
+    <title>${escapeHtml(post.title)} | Wenhao Chen</title>
+    <link rel="stylesheet" href="../../src/styles.css" />
+    <script>
+      window.MathJax = {
+        tex: { inlineMath: [["$", "$"], ["\\\\(", "\\\\)"]], displayMath: [["$$", "$$"], ["\\\\[", "\\\\]"]] },
+        svg: { fontCache: "global" }
+      };
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  </head>
+  <body class="article-page">
+    <header class="article-topbar">
+      <a href="../../">Wenhao Chen</a>
+      <a href="../../#blog">All writing</a>
+    </header>
+    <main class="article-shell">
+      <aside class="article-toc" aria-label="Table of contents">
+        <p>Contents</p>
+        <nav>${toc}</nav>
+      </aside>
+      <article class="article-content">
+        <p class="article-kicker">${escapeHtml(post.category)} / ${escapeHtml(post.date)}</p>
+        <h1>${escapeHtml(post.title)}</h1>
+        <p class="article-summary">${escapeHtml(post.summary)}</p>
+        <div class="markdown-body article-markdown">${post.html}</div>
+      </article>
+    </main>
+  </body>
+</html>
+`;
+}
+
 function renderMarkdown(markdown) {
   const lines = markdown.replace(/\r\n/g, "\n").split("\n");
   const html = [];
+  const toc = [];
   let paragraph = [];
   let list = [];
+  let orderedList = [];
   let code = [];
+  let math = [];
   let inCode = false;
+  let inMath = false;
 
   const flushParagraph = () => {
     if (!paragraph.length) return;
@@ -96,7 +161,32 @@ function renderMarkdown(markdown) {
     list = [];
   };
 
+  const flushOrderedList = () => {
+    if (!orderedList.length) return;
+    html.push(`<ol>${orderedList.map((item) => `<li>${inline(item)}</li>`).join("")}</ol>`);
+    orderedList = [];
+  };
+
   for (const line of lines) {
+    if (line.trim() === "$$") {
+      if (inMath) {
+        html.push(`<div class="math-block">$$\n${escapeHtml(math.join("\n"))}\n$$</div>`);
+        math = [];
+        inMath = false;
+      } else {
+        flushParagraph();
+        flushList();
+        flushOrderedList();
+        inMath = true;
+      }
+      continue;
+    }
+
+    if (inMath) {
+      math.push(line);
+      continue;
+    }
+
     if (line.startsWith("```")) {
       if (inCode) {
         html.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
@@ -105,6 +195,7 @@ function renderMarkdown(markdown) {
       } else {
         flushParagraph();
         flushList();
+        flushOrderedList();
         inCode = true;
       }
       continue;
@@ -118,28 +209,44 @@ function renderMarkdown(markdown) {
     if (!line.trim()) {
       flushParagraph();
       flushList();
+      flushOrderedList();
       continue;
     }
 
-    const heading = /^(#{1,3})\s+(.+)$/.exec(line);
+    const heading = /^(#{1,4})\s+(.+)$/.exec(line);
     if (heading) {
       flushParagraph();
       flushList();
-      const level = heading[1].length + 1;
-      html.push(`<h${level}>${inline(heading[2])}</h${level}>`);
+      flushOrderedList();
+      const level = heading[1].length;
+      const htmlLevel = level === 1 ? 2 : level;
+      const text = stripInlineMarkdown(heading[2]);
+      const id = uniqueHeadingId(text, toc);
+      toc.push({ id, level, text });
+      html.push(`<h${htmlLevel} id="${id}">${inline(heading[2])}</h${htmlLevel}>`);
       continue;
     }
 
     const bullet = /^[-*]\s+(.+)$/.exec(line);
     if (bullet) {
       flushParagraph();
+      flushOrderedList();
       list.push(bullet[1]);
+      continue;
+    }
+
+    const ordered = /^\d+\.\s+(.+)$/.exec(line);
+    if (ordered) {
+      flushParagraph();
+      flushList();
+      orderedList.push(ordered[1]);
       continue;
     }
 
     if (line.startsWith("> ")) {
       flushParagraph();
       flushList();
+      flushOrderedList();
       html.push(`<blockquote>${inline(line.slice(2))}</blockquote>`);
       continue;
     }
@@ -149,8 +256,13 @@ function renderMarkdown(markdown) {
 
   flushParagraph();
   flushList();
+  flushOrderedList();
 
-  return html.join("");
+  if (inMath) {
+    html.push(`<div class="math-block">$$\n${escapeHtml(math.join("\n"))}\n$$</div>`);
+  }
+
+  return { html: html.join(""), toc };
 }
 
 function inline(text) {
@@ -181,10 +293,54 @@ function firstParagraph(body) {
     ?.replace(/\s+/g, " ");
 }
 
+function stripLeadingTitle(body, title) {
+  const lines = body.trim().split("\n");
+  const firstLine = lines[0]?.trim();
+
+  if (firstLine === `# ${title}`) {
+    return lines.slice(1).join("\n").trim();
+  }
+
+  return body.trim();
+}
+
+function stripInlineMarkdown(text) {
+  return text
+    .replace(/\*\*(.+?)\*\*/g, "$1")
+    .replace(/\*(.+?)\*/g, "$1")
+    .replace(/`(.+?)`/g, "$1")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .trim();
+}
+
+function uniqueHeadingId(text, toc) {
+  const base = slugify(text) || "section";
+  let id = base;
+  let index = 2;
+
+  while (toc.some((item) => item.id === id)) {
+    id = `${base}-${index}`;
+    index += 1;
+  }
+
+  return id;
+}
+
+function slugify(value) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9\u4e00-\u9fff]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 function escapeHtml(value) {
   return value
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;");
+}
+
+function escapeAttribute(value) {
+  return escapeHtml(value).replaceAll("'", "&#39;");
 }

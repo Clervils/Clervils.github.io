@@ -6,7 +6,7 @@
   "scripts": {
     "content": "node scripts/build-content.mjs",
     "dev": "npm run content && python3 -m http.server 5173",
-    "build": "npm run content && mkdir -p dist && cp index.html dist/ && cp -R src content dist/"
+    "build": "npm run content && mkdir -p dist && cp index.html dist/ && cp -R src content blog dist/"
   },
   "dependencies": {},
   "devDependencies": {}
