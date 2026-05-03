@@ -53,34 +53,43 @@
       <section class="section grid-two" id="research">
         <div>
           <p class="eyebrow">Research</p>
-          <h2>Make the research legible before making it loud.</h2>
+          <h2>News: Our work has been accepted as spotlight paper in ICML 2026</h2>
         </div>
-        <div class="research-list">
-          <article class="research-card">
-            <span>Research Direction</span>
-            <h3>Trustworthy AI and AI Alignment</h3>
-            <p>
-              Studying how AI systems can be evaluated, aligned, and deployed
-              with behavior that remains reliable under uncertainty.
-            </p>
-          </article>
-          <article class="research-card">
-            <span>Current Work</span>
-            <h3>Behavioral Alignment</h3>
-            <p>
-              Exploring whether behavioral objectives are well-defined for
-              value-driven AI systems and how dynamics shape alignment.
-            </p>
-          </article>
-          <article class="research-card">
-            <span>Public Output</span>
-            <h3>Readable Research Notes</h3>
-            <p>
-              Turning experimental findings into concise notes that are useful
-              for collaborators and readers outside the lab.
-            </p>
-          </article>
-        </div>
+        <article class="research-feature">
+          <div class="paper-meta">
+            <span class="paper-badge">ICML 2026 Spotlight</span>
+            <time datetime="2026-05-01">Published 01 May 2026</time>
+          </div>
+          <h3>
+            Toward Stable Value Alignment: Introducing Independent Modules for
+            Consistent Value Guidance
+          </h3>
+          <p class="authors">
+            Wenhao Chen, Sirui Sun, Shengyuan Bai, Guojie Song
+          </p>
+          <p class="tldr">
+            We propose SVGT, a plug-and-play module that achieves stable LLM
+            alignment by decoupling value modeling from the backbone's dynamic
+            residual stream and steering generation via latent Bridge Tokens.
+          </p>
+          <p>
+            SVGT introduces an independent value module with dedicated value
+            representations and explicit behavioral guidance. Latent Bridge
+            Tokens act as dynamic value anchors, steering generation without
+            disrupting the backbone's internal representations. Across multiple
+            backbones and safety benchmarks, SVGT reduces harmful scores by over
+            70% while maintaining generation fluency.
+          </p>
+          <div class="paper-actions" aria-label="Paper links">
+            <span class="button compact" aria-disabled="true">PDF soon</span>
+            <span class="button compact ghost" aria-disabled="true">
+              arXiv soon
+            </span>
+            <span class="button compact ghost" aria-disabled="true">
+              Code soon
+            </span>
+          </div>
+        </article>
       </section>
 
       <section class="section blog-panel" id="blog">
